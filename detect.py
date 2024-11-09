@@ -406,32 +406,22 @@ def parse_opt():
 
 
 def main(opt):
-    """
-    Executes YOLOv5 model inference based on provided command-line arguments, validating dependencies before running.
 
-    Args:
-        opt (argparse.Namespace): Command-line arguments for YOLOv5 detection. See function `parse_opt` for details.
-
-    Returns:
-        None
-
-    Note:
-        This function performs essential pre-execution checks and initiates the YOLOv5 detection process based on user-specified
-        options. Refer to the usage guide and examples for more information about different sources and formats at:
-        https://github.com/ultralytics/ultralytics
-
-    Example usage:
-
-    ```python
-    if __name__ == "__main__":
-        opt = parse_opt()
-        main(opt)
-    ```
-    """
     check_requirements(ROOT / "requirements.txt", exclude=("tensorboard", "thop"))
-    run(**vars(opt))
+    return run(**vars(opt))
 
 
-if __name__ == "__main__":
+
+
+
+def handler(event):
+    """
+    This is the handler function that will be called by RunPod serverless.
+    """
     opt = parse_opt()
     main(opt)
+    return "yes"
+
+
+if __name__ == '__main__':
+    runpod.serverless.start({'handler': handler})
